@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/3e2cca44-e7aa-40b2-a1f7-f45baab81d75/microsoft.web/sites/subscriptions/3e2cca44-e7aa-40b2-a1f7-f45baab81d75/resourceGroups/i2fl_group/providers/Microsoft.Web/sites/i2fl",
+    "appService.deploySubpath": ""
+}
