@@ -1,6 +1,9 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
+
+import { from } from 'rxjs';
+
 let headers = new HttpHeaders();
 
 @Injectable({
@@ -11,7 +14,5 @@ export class AuthenticationService {
 
     constructor(private httpClient: HttpClient) { }
 
-    authenticate() { // change this
-        return "siraj.berry@idento.fr";
-    }
+  
 }

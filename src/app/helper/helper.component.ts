@@ -33,4 +33,9 @@ export class HelperComponent implements OnInit {
     counter = 0;
     return true;
   }
+
+  //yyyy-MM-dd to dd/MM/yyyy
+  luccaToFitnetDateConvertor(day: Number, month: Number, year: Number) {
+    return  day +"/"+ ((month>9)?month:'0'+month) +"/"+ year;
+  }
 }

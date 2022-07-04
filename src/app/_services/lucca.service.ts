@@ -15,8 +15,8 @@ export class LuccaService {
 
   }
   // get List Leave reauest from Lucca
-  getListLeaves(): Observable<any> {
-    return this.httpClient.get("https://i-tracing.ilucca-test.net/api/v3/leaves?leavePeriod.ownerId=1583&date=between,2022-07-01,2022-07-31&paging=1", { headers: this.headers });
+  getListLeaves(ownerId: Number, date: String, paging: Number): Observable<any> {
+    return this.httpClient.get("http://localhost:8080/LuccaLeaves/"+ownerId+"&"+date+"&"+paging);
   }
 
   getMidDayLeave(url: string): Observable<any> {

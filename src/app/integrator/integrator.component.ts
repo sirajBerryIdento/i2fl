@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { TitleStrategy } from '@angular/router';
+import { Observable } from 'rxjs';
 import { HelperComponent } from '../helper/helper.component';
 import { StaticValues } from '../_enums/StaticValues.enum';
 import { FitnetLeave } from '../_models/LeaveFitnet.model';
@@ -12,50 +14,50 @@ import { LuccaService } from '../_services/lucca.service';
   styleUrls: ['./integrator.component.css']
 })
 export class IntegratorComponent extends HelperComponent implements OnInit {
-
+  luccaLeaves = [];
   /*static values to change section starts here */
-  luccaLeaves = [
-    {
-      "id": "32710-20220711-PM",
-      "name": "32710-20220711-PM",
-      "url": "https://i-tracing.ilucca-test.net/api/v3/leaves/32710-20220711-PM",
-      "data": {
-        "isAM": false
-      }
-    },
-    {
-      "id": "32710-20220711-AM",
-      "name": "32710-20220711-AM",
-      "url": "https://i-tracing.ilucca-test.net/api/v3/leaves/32710-20220711-AM",
-      "data": {
-        "isAM": true
-      }
-    },
-    {
-      "id": "32710-20220712-PM",
-      "name": "32710-20220712-PM",
-      "url": "https://i-tracing.ilucca-test.net/api/v3/leaves/32710-20220712-PM",
-      "data": {
-        "isAM": false
-      }
-    },
-    {
-      "id": "32710-20220712-AM",
-      "name": "32710-20220712-AM",
-      "url": "https://i-tracing.ilucca-test.net/api/v3/leaves/32710-20220712-AM",
-      "data": {
-        "isAM": true
-      }
-    }
-  ];
+  // luccaLeaves = [
+  //   {
+  //     "id": "32710-20220711-PM",
+  //     "name": "32710-20220711-PM",
+  //     "url": "https://i-tracing.ilucca-test.net/api/v3/leaves/32710-20220711-PM",
+  //     "data": {
+  //       "isAM": false
+  //     }
+  //   },
+  //   {
+  //     "id": "32710-20220711-AM",
+  //     "name": "32710-20220711-AM",
+  //     "url": "https://i-tracing.ilucca-test.net/api/v3/leaves/32710-20220711-AM",
+  //     "data": {
+  //       "isAM": true
+  //     }
+  //   },
+  //   {
+  //     "id": "32710-20220712-PM",
+  //     "name": "32710-20220712-PM",
+  //     "url": "https://i-tracing.ilucca-test.net/api/v3/leaves/32710-20220712-PM",
+  //     "data": {
+  //       "isAM": false
+  //     }
+  //   },
+  //   {
+  //     "id": "32710-20220712-AM",
+  //     "name": "32710-20220712-AM",
+  //     "url": "https://i-tracing.ilucca-test.net/api/v3/leaves/32710-20220712-AM",
+  //     "data": {
+  //       "isAM": true
+  //     }
+  //   }
+  // ];
   luccaPayload = [{ // to be changed to dynamic values
     "id": "78287-20180424-PM",
-    "date": "2018-04-24",
+    "date": "2022-09-12",
     "isAm": false,
     "owner": {
-      "id": 134, // use this for authentication
+      "id": 1583, // use this for authentication
       "name": "Luca Pacioli",
-      "email": "luca.paccioli@lucca.fr",
+      "email": "siraj.berry@idento.fr",
       "employeeNumber": "00001"
     },
     "leaveAccount": {
@@ -68,8 +70,11 @@ export class IntegratorComponent extends HelperComponent implements OnInit {
     "confirmationDate": "2018-04-04T22:34:47.797",
     "isCancelled": false,
     "cancellationDate": ""
-  }];
+  }];;
+
   email = ""; // update this to be on each user
+  ownerId = 0; // update this to be on each user
+
   LeaveType = StaticValues.LEAVE_TYPE;
   leaveId: Number = 0; // change this 
   /* static values to change section ends here */
@@ -78,22 +83,28 @@ export class IntegratorComponent extends HelperComponent implements OnInit {
   constructor(private fitnetService: FitnetService, private luccaService: LuccaService, private authenticationService: AuthenticationService) {
     super();
   }
+
   deleteLeave() {// Called when the user wants to delete his leave
     var payloadLeave = this.luccaPayload[0];// assuming that siraj took 2 days off and the payload returned an array of 4 leaves: to be checked once the webhook is fixed
 
     if (payloadLeave.isConfirmed) {
       var leaveDate = payloadLeave.date.split("-"); //2018-04-24
       var companyId = StaticValues.COMPANY_ID;
-      var month = Number(leaveDate[1]);
-      var year = Number(leaveDate[0]);
 
+      var year = Number(leaveDate[0]);
+      var month = Number(leaveDate[1]);
+      var day = Number(leaveDate[2]);
+
+      var luccaToFitnetDateFormat = this.luccaToFitnetDateConvertor(day, month, year);
+      console.log("luccaToFitnetDateFormat: ", luccaToFitnetDateFormat)
       this.fitnetService.getLeave(companyId, month, year).subscribe(
         thisMonthLeaves => {
+
           if (thisMonthLeaves) {
             thisMonthLeaves.forEach((leave: any) => {
-              if (leave.beginDate == leaveDate) { // VERY IMP: this wont work unless u fixed the format date
-                var leave_id = leave.id;
-                this.fitnetService.deleteLeaves(leave_id);
+              console.log("leave", leave)
+              if (leave.beginDate === luccaToFitnetDateFormat) {
+                this.fitnetService.deleteLeaves(leave.leaveId).subscribe(res => { console.log("sucess") });
               }
             });
           }
@@ -101,17 +112,47 @@ export class IntegratorComponent extends HelperComponent implements OnInit {
       );
     }
   }
-  
-  override ngOnInit(): void {
-    this.authentication();
-  }
 
-  authentication() {
-    this.email = this.authenticationService.authenticate();
-  }
+  override ngOnInit(): void { }
 
+  getLuccaPayload() {
+    return [{ // to be changed to dynamic values
+      "id": "78287-20180424-PM",
+      "date": "2022-09-12",
+      "isAm": false,
+      "owner": {
+        "id": 1583, // use this for authentication
+        "name": "Luca Pacioli",
+        "email": "siraj.berry@idento.fr",
+        "employeeNumber": "00001"
+      },
+      "leaveAccount": {
+        "id": 1718,
+        "name": "Annual leave 2018",
+        "categoryId": 1,
+        "categoryName": "Annual leave"
+      },
+      "isConfirmed": true,
+      "confirmationDate": "2018-04-04T22:34:47.797",
+      "isCancelled": false,
+      "cancellationDate": ""
+    }];
+  }
+  getUserInfo() {
+    this.ownerId = this.getLuccaPayload()[0]?.owner.id;
+    this.email = this.getLuccaPayload()[0]?.owner.email;
+    console.log("ownerId: " + this.ownerId + ", email: " + this.email)
+  }
   integrate() {
-    this.integrator(this.luccaLeaves);
+    this.getUserInfo();
+
+    this.getLuccaLeaves().subscribe(leaves => {
+      console.log(leaves)
+      if (leaves) {
+        this.luccaLeaves = leaves.data.items;
+        // this.integrator(this.luccaLeaves);
+      }
+    })
   }
   integrator(luccaLeaves: any) {
     //case of half day : to be implemented
@@ -135,35 +176,28 @@ export class IntegratorComponent extends HelperComponent implements OnInit {
 
   setLeaves(fitnetLeaveRequest: any) {
     this.fitnetService.postLeaves(fitnetLeaveRequest).subscribe(data => function () {
-      console.log("data", data);
     }, error => {
       if (error) {
         let str = error.error.text.split(".")[0].split(": ")[1];
-        console.log("str: ", str)
         this.leaveId = Number(str);
       }
     })
   }
 
-  getLuccaLeaves() {
-    // this.luccaService.getListLeaves().subscribe(res => {
-    //   console.log("res: ", res)
-    // });
-    this.luccaLeaves.forEach(leave => {
-      this.luccaService.getMidDayLeave(leave.url).subscribe(
-        data => {
-          console.log("leave: " + leave.id + " : ", data);
-        }
-      )
-    });
-    console.log("lucca leaves: ", this.luccaLeaves)
+  getLuccaLeaves(): Observable<any> {
+    return this.luccaService.getListLeaves(this.ownerId, 'between,2022-09-01,2022-09-30', 1);
   }
-  oldDeleteLeaves(leaveId: Number) {// to be deleted
-    this.fitnetService.deleteLeaves(leaveId).subscribe(res => {
-      console.log("res: ", res);
-      alert("deleted successfully!");
-    });
-  }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -180,7 +214,6 @@ export class IntegratorComponent extends HelperComponent implements OnInit {
       userId: "userId"
     }
     this.luccaService.postCommentsByParameter(opt).subscribe((data) => {
-      console.log("data", data);
     })
   }
 }
