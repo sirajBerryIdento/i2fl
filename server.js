@@ -21,15 +21,34 @@
 //     next();
 // }
 
-const express = require('express');
-const app = express();
-app.use(express.static(__dirname+ '\\'+'dist'+ '\\'+'my-app'));
-console.log(__dirname+ '\\'+'dist'+ '\\'+'my-app')
-app.get('/*', (req, res) =>
-{
-    res.sendFile(__dirname+ '\\'+ 'dist' +'\\'+'my-app '+'\\' +' index.html');
-}
-);
+// const express = require('express');
+// const app = express();
+// app.use(express.static(__dirname+ '\\'+'dist'+ '\\'+'my-app'));
+// console.log(__dirname+ '\\'+'dist'+ '\\'+'my-app')
+// app.get('/*', (req, res) =>
+// {
+//     res.sendFile(__dirname+ '\\'+ 'dist' +'\\'+'my-app '+'\\' +' index.html');
+// }
+// );
 
-app.listen(8089, function () {
-})
+// app.listen(8089, function () {
+// })
+
+
+
+//Install express server
+const express = require('express');
+const path = require('path');
+
+const app = express();
+
+// Serve only the static files form the dist directory
+app.use(express.static(__dirname + '/dist/app-name'));
+
+app.get('/*', function(req,res) {
+    
+res.sendFile(path.join(__dirname+'/dist/app-name/index.html'));
+});
+
+// Start the app by listening on the default Heroku port
+app.listen(process.env.PORT || 8088);
