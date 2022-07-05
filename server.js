@@ -23,10 +23,10 @@
 
 const express = require('express');
 const app = express();
-app.use(express.static(__dirname+'/dist/my-app'));
+app.use(express.static('./dist/my-app'));
 app.get('/*', (req, res) =>
 {
-    res.sendFile(__dirname+'/dist/my-app/index.html');
+    res.sendFile('index.html', {root: 'dist/my-app/'});
 }
 );
 
