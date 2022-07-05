@@ -23,15 +23,13 @@
 
 const express = require('express');
 const app = express();
-// app.use(express.static(__dirname+'/dist/my-app'));
-app.use(express.static('./dist/my-app'));
+app.use(express.static(__dirname+ '\\'+'dist'+ '\\'+'my-app'));
+console.log(__dirname+ '\\'+'dist'+ '\\'+'my-app')
 app.get('/*', (req, res) =>
 {
-    // res.sendFile(__dirname+'/dist/my-app/index.html');
-    res.sendFile('index.html', { root: 'dist/my-app/' });
+    res.sendFile(__dirname+ '\\'+ 'dist' +'\\'+'my-app '+'\\' +' index.html');
 }
 );
 
-app.listen(8088, function () {
-    console.log("Application listening at http://localhost:8088   __dirname: ", __dirname)
+app.listen(8089, function () {
 })
