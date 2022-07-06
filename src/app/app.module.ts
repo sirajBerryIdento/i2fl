@@ -8,22 +8,19 @@ import { IntegratorComponent } from './integrator/integrator.component';
 import { FitnetService } from './_services/fitnet.service';
 import { LuccaService } from './_services/lucca.service';
 import { HelperComponent } from './helper/helper.component';
-import { SynchronizedComponent } from './synchronization/synchronized/synchronized.component';
-import { SynchronizedService } from './_services/synchronized.service';
 
 @NgModule({
   declarations: [
     AppComponent,
     IntegratorComponent,
     HelperComponent,
-    SynchronizedComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
   ],
-  providers: [LuccaService,  FitnetService,SynchronizedService],
+  providers: [LuccaService,  FitnetService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
