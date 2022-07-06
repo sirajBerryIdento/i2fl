@@ -18,3 +18,10 @@ app.listen(process.env.PORT || 8089);
 References: https://itnext.io/how-to-deploy-angular-application-to-heroku-1d56e09c5147
 command: git push --set-upstream origin master
 */
+
+
+app.get('/synchronized', function(req,res){
+    console.log("req: ",req)
+    console.log("res: ",res)
+    res.send("Hello World!!!")
+})
