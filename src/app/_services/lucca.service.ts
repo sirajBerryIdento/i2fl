@@ -22,7 +22,7 @@ export class LuccaService {
   getMidDayLeave(url: string): Observable<any> {
     return this.httpClient.get(url);
   }
-
+  
 
   // how to pass the headers?
   //example on get with parameteres

@@ -20,8 +20,4 @@ command: git push --set-upstream origin master
 */
 
 
-app.get('/synchronized', function(req,res){
-    console.log("req: ",req)
-    console.log("res: ",res)
-    res.send("Hello World!!!")
-})
+
