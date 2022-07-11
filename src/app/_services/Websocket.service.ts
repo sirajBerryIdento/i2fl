@@ -7,8 +7,8 @@ import { map } from 'rxjs/operators';
 import { LiveURL } from "../_enums/StaticValues.enum";
 
 // const CHAT_URL = "ws://emphasized-superb-bard.glitch.me/";
-// const CHAT_URL = LiveURL.WSS_VALUE;
-const CHAT_URL = "ws://localhost:3000/";
+const CHAT_URL = LiveURL.WSS_VALUE;
+// const CHAT_URL = "ws://localhost:3000/";
 
 export interface Message {
     source: string;
