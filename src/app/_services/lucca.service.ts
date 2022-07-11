@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { LuccaLeave } from "../_models/LuccaLeave.model";
+import { LiveURL } from "../_enums/StaticValues.enum";
 let headers = new HttpHeaders();
 
 @Injectable({
@@ -16,7 +17,7 @@ export class LuccaService {
   }
   // get List Leave reauest from Lucca
   getListLeaves(ownerId: Number, date: String, paging: Number): Observable<any> {
-    return this.httpClient.get("http://localhost:8080/LuccaLeaves/"+ownerId+"&"+date+"&"+paging);
+    return this.httpClient.get(LiveURL.BE_VALUE+ownerId+"&"+date+"&"+paging);
   }
 
   getMidDayLeave(url: string): Observable<any> {
