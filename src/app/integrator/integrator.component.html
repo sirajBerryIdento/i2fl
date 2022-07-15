@@ -1,5 +1,12 @@
 <button (click)="integrate()">submit a leave request</button>
 <button (click)="deleteLeave()">delete a submitted request</button>
 
+<button (click)="getPosts()" >
+    getPosts
+</button>
 
 
+
+<ul>
+    <li *ngFor="let m of meesages"> id: {{m}} </li>
+</ul>

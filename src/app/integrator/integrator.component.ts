@@ -1,3 +1,4 @@
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { TitleStrategy } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -7,6 +8,8 @@ import { FitnetLeave } from '../_models/LeaveFitnet.model';
 import { AuthenticationService } from '../_services/authentication.service';
 import { FitnetService } from '../_services/fitnet.service';
 import { LuccaService } from '../_services/lucca.service';
+import { WebsocketService } from '../_services/Websocket.service';
+let headers = new HttpHeaders();
 
 @Component({
   selector: 'app-integrator',
@@ -15,6 +18,9 @@ import { LuccaService } from '../_services/lucca.service';
 })
 export class IntegratorComponent extends HelperComponent implements OnInit {
   luccaLeaves = [];
+  meesages : any[] = [];
+  received : any[] = [];
+  
   /*static values to change section starts here */
   // luccaLeaves = [
   //   {
@@ -80,9 +86,13 @@ export class IntegratorComponent extends HelperComponent implements OnInit {
   /* static values to change section ends here */
 
 
-  constructor(private fitnetService: FitnetService, private luccaService: LuccaService, private authenticationService: AuthenticationService) {
+  constructor(private websocketsService: WebsocketService, private fitnetService: FitnetService, private luccaService: LuccaService, private authenticationService: AuthenticationService) {
     super();
+    this.luccaService.getWebhook().subscribe(res=>console.log("res: ",res))
   }
+  headers = headers.set('Content-Type', 'application/json; charset=utf-8').append('Authorization', 'lucca application=df45695d-14f6-4274-8d4a-27601f3ee64a'); // get apiKeyUUID 
+
+
 
   deleteLeave() {// Called when the user wants to delete his leave
     var payloadLeave = this.luccaPayload[0];// assuming that siraj took 2 days off and the payload returned an array of 4 leaves: to be checked once the webhook is fixed
@@ -207,13 +217,15 @@ export class IntegratorComponent extends HelperComponent implements OnInit {
 
 
   /* example function -- to be deleted in the future*/
-  postCommentsByParameter() {
+  getPosts() {
     var opt = {
       body: "body",
       title: "title",
       userId: "userId"
     }
-    this.luccaService.postCommentsByParameter(opt).subscribe((data) => {
+    this.luccaService.getPosts().subscribe((data) => {
+      console.log("data: ",typeof data)
+      JSON.parse(data).forEach((element:any) => this.meesages.push(element.id));
     })
   }
 }
