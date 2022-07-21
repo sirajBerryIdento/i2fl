@@ -88,7 +88,7 @@ export class IntegratorComponent extends HelperComponent implements OnInit {
 
   constructor(private websocketsService: WebsocketService, private fitnetService: FitnetService, private luccaService: LuccaService, private authenticationService: AuthenticationService) {
     super();
-    this.luccaService.getWebhook().subscribe(res=>console.log("res: ",res))
+    // this.luccaService.getWebhook().subscribe(res=>console.log("res: ",res))
   }
   headers = headers.set('Content-Type', 'application/json; charset=utf-8').append('Authorization', 'lucca application=df45695d-14f6-4274-8d4a-27601f3ee64a'); // get apiKeyUUID 
 
@@ -193,40 +193,11 @@ export class IntegratorComponent extends HelperComponent implements OnInit {
       }
     })
   }
-
+  getIntegrate() {
+    return this.luccaService.getIntegrate().subscribe(res=>{console.log(res)});
+  }
   getLuccaLeaves(): Observable<any> {
     return this.luccaService.getListLeaves(this.ownerId, 'between,2022-09-01,2022-09-30', 1);
-  }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  /* example function -- to be deleted in the future*/
-  getPosts() {
-    var opt = {
-      body: "body",
-      title: "title",
-      userId: "userId"
-    }
-    this.luccaService.getPosts().subscribe((data) => {
-      console.log("data: ",typeof data)
-      JSON.parse(data).forEach((element:any) => this.meesages.push(element.id));
-    })
   }
 }
 

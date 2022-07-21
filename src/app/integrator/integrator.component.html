@@ -1,12 +1,33 @@
-<button (click)="integrate()">submit a leave request</button>
-<button (click)="deleteLeave()">delete a submitted request</button>
+<!DOCTYPE html>
+<html>
 
-<button (click)="getPosts()" >
-    getPosts
-</button>
+<head>
+    <script src="https://cdn.socket.io/socket.io-3.0.1.min.js"></script>
+</head>
 
+<body>
+    <button (click)="integrate()">submit a leave request</button>
+    <button (click)="deleteLeave()">delete a submitted request</button>
+    
+    <button (click)="getLuccaLeaves()">
+        getLuccaLeaves
+    </button>
+    <ul>
+        <li *ngFor="let m of meesages"> id: {{m}} </li>
+    </ul>
 
+    <h1>siraj</h1>
+    <script>
+        const socket = io();
+        // const socket = io('https://i2fl-wss.herokuapp.com/')
+        socket.on('connection')
 
-<ul>
-    <li *ngFor="let m of meesages"> id: {{m}} </li>
-</ul>
+        socket.on('chat message', (data) => {
+            console.log("data", data);
+            document.querySelector('h1').innerHTML = data;
+        })
+
+    </script>
+</body>
+
+</html>

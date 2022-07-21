@@ -16,28 +16,16 @@ export class LuccaService {
   }
   // get List Leave reauest from Lucca
   getListLeaves(ownerId: Number, date: String, paging: Number): Observable<any> {
-    return this.httpClient.get(LiveURL.BE_VALUE+ownerId+"&"+date+"&"+paging);
+    return this.httpClient.get("http://localhost:8088/"+ownerId+"&"+date+"&"+paging);
   }
-
+ getIntegrate() {
+  return this.httpClient.post('http://localhost:8088/integrate', null);
+ }
   getMidDayLeave(url: string): Observable<any> {
     return this.httpClient.get(url);
   }
   
   sendDate(data:any): Observable<any> {
     return this.httpClient.post("http://localhost:8080/webhook", data);
-  }
-  // how to pass the headers?
-  //example on get with parameteres
-  getCommentsByParameter(): Observable<any> {
-    let params1 = new HttpParams().set('userId', "1");
-    return this.httpClient.get("https://jsonplaceholder.typicode.com/comments?postId=1", { params: params1 })
-  }
-
-  getWebhook() {
-    return this.httpClient.get("http://localhost:8080/webhook", { headers: this.headers, responseType: 'text' })
-  }
-
-  getPosts(opts?: any): Observable<any> {
-    return this.httpClient.get("http://localhost:8080/posts", { headers: this.headers, responseType: 'text' })
   }
 }
